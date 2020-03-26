@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Punch",
+    "link": "https://punchng.com/search/coronavirus",
+    "selector": "items",
+    "title_tag": "h2",
+    "title": "seg-title",
+    "image": "seg-image",
+    "post_link": ".items .col-sm-12 > a"
+  }
+]

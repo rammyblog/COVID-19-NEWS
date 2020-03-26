@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Vanguard",
+    "link": "https://www.vanguardngr.com/category/coronavirus-updates",
+    "selector": "header .entry-title"
+  },
+
+  {
+    "name": "Nation Online",
+    "link": "https://thenationonlineng.net/category/news/",
+    "selector": "article .category-corona-virus"
+  },
+
+  {
+    "name": "Daily Post",
+    "link": "https://dailypost.ng/tag/coronavirus/",
+    "selector": "div .cat_page .panel .panel_lead .panel_default"
+  },
+  {
+    "name": "Premium Times",
+    "link": "https://www.premiumtimesng.com/category/coronavirus",
+    "selector": "div .a-story"
+  },
+  {
+    "name": "Punch",
+    "link": "https://punchng.com/search/coronavirus",
+    "selector": "div .items .col-sm-12"
+  }
+]
+
