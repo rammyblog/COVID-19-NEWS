@@ -1,4 +1,4 @@
-# Nigeria COVID-19 NEWS tracker 2.0+ project template
+# Nigeria COVID-19 NEWS Tracker
 
 This project was developed to help Nigeria get authentic news from her top media outlets.
 
