@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db.utils import IntegrityError
 import requests
 from bs4 import BeautifulSoup
 import random
@@ -6,6 +7,7 @@ import json
 import time
 from news.models import News
 import os
+
 import argparse
 
 user_agent_list = [
@@ -56,21 +58,27 @@ class Command(BaseCommand):
         }
         return context
 
-    def saving_to_db(self, title, image, link, source):
+    def saving_to_db(self, title, image, link, source, summary):
         try:
             News.objects.create(
                 title=title,
                 image=image,
                 link=link,
-                source= source
+                source=source,
+                summary=summary
             )
             print('Added')
-        except:
+        except IntegrityError:
             print('%s already exists' % (title,))
 
     def handle(self, *args, **options):
+        self.scrape_punch()
         self.scrape_vanguard()
+        self.scrape_premium_times()
+        self.scrape_nation()
         self.scrape_daily_post()
+
+        # self.scrape_daily_post()
 
     def handle_file_mapping(self, filename):
         path = os.path.join(self.base_dir, 'commands/Jsons/{}.json'.format(filename))
@@ -86,16 +94,19 @@ class Command(BaseCommand):
                 main_article = article.find_all('a')[0]
                 try:
                     image = (''.join(str(main_article.find('figure')['data-src']).split(" ")))
+                    summary = main_article.find('p').get_text()
                 except TypeError:
                     image = ''
+                    summary = ''
 
                 title = main_article['title']
                 link = main_article['href']
                 source = 'Punch'
 
                 # image = image
-                print(image, title, link)
-                self.saving_to_db(title, image, link, source)
+
+                self.saving_to_db(title, image, link, source, summary)
+
                 # self.news.append(main_article_dict)
             time.sleep(60)
 
@@ -108,16 +119,19 @@ class Command(BaseCommand):
             for article in articles:
                 main_article = article.find_all('a')[0]
                 main_header = article.find_all("h2", attrs={"class": "entry-title"})[0]
+                main_summary = article.find('div', attrs={"class": "entry-content"})
+                # print(main_summary)
                 try:
                     image = (''.join(str(main_article.find('img')['src']).split(" ")))
                     title = main_header.find('a').get_text()
                     link = main_header.find('a')['href']
                     source = 'Vanguard'
+                    summary = main_summary.find('p').get_text()[:-9]
                 except TypeError:
                     image = ''
                 #
 
-                self.saving_to_db(title, image, link, source)
+                self.saving_to_db(title, image, link, source, summary)
                 # self.news.append(main_article_dict)
 
         time.sleep(60)
@@ -137,15 +151,17 @@ class Command(BaseCommand):
                 except IndexError:
                     continue;
                 main_header = article.find_all("h3", attrs={"class": "jeg_post_title"})[0]
-
+                main_summary = article.find_all("div", attrs={"class": "jeg_post_excerpt"})[0]
                 try:
                     image = ''.join(str(main_article.find('img')['data-src']).split(" "))
                     link = main_header.find('a')['href']
                     title = main_header.find('a').get_text()
                     source = 'Nation Online'
+                    summary = main_summary.find('p').get_text()
                 except TypeError:
                     continue
-                self.saving_to_db(title, image, link, source)
+                self.saving_to_db(title, image, link, source, summary)
+
                 # self.news.append(main_article_dict)
         time.sleep(60)
 
@@ -163,16 +179,19 @@ class Command(BaseCommand):
                 except IndexError:
                     continue;
                 main_header = article.find_all("h3", attrs={"class": "a-story-title"})[0].get_text()
+                main_summary = article.find_all("div", attrs={"class": "a-story-content"})[0].get_text()
                 try:
                     image = (str(main_article.find('img')['src']))
                     link = main_article.find('a')['href']
                     title = main_header
                     source = 'Premium Times'
+                    summary = main_summary
+
 
                 except TypeError:
                     continue;
 
-                self.saving_to_db(title, image, link, source)
+                self.saving_to_db(title, image, link, source, summary)
 
         return time.sleep(60)
 
@@ -192,10 +211,11 @@ class Command(BaseCommand):
                         "class": 'mvp-blog-story-text'
                     }).find('h2').get_text()
                     source = 'Daily Post'
+                    summary = title
 
                 except IndexError:
                     continue;
 
-                self.saving_to_db(title, image, link, source)
+                self.saving_to_db(title, image, link, source, summary)
 
         time.sleep(60)
