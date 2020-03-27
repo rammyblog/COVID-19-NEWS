@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xlstfmem+_d(vp$#h_n%z3)*elmdop(8**c#yq7s&nr)vaohh^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -85,7 +85,8 @@ WSGI_APPLICATION = 'CovidNewsBack.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2"
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+     
     }
 }
 
