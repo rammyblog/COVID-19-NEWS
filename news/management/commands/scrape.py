@@ -3,7 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 import random
 import json
-from .models import News
+import time
+from news.models import News
+import os
+import argparse
 
 user_agent_list = [
     # Chrome
@@ -33,16 +36,14 @@ user_agent_list = [
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
 ]
 
-GLOBAL_MYCLASS_LIST = []
 
-
-class Scraper(BaseCommand):
+class Command(BaseCommand):
     help = "Getting data"
 
     def __init__(self):
         self.session = requests.Session()
         self.session.headers = {"User-Agent": random.choice(user_agent_list)}
-        GLOBAL_MYCLASS_LIST.append(self)
+        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.news = []
 
     def parse_html(self, json_object):
@@ -55,43 +56,52 @@ class Scraper(BaseCommand):
         }
         return context
 
-    @staticmethod
-    def saving_to_db(self, title, image, link):
+    def saving_to_db(self, title, image, link, source):
         try:
             News.objects.create(
                 title=title,
                 image=image,
-                link=link
+                link=link,
+                source= source
             )
+            print('Added')
         except:
             print('%s already exists' % (title,))
 
-        self.stdout.write('job complete')
     def handle(self, *args, **options):
-        self.scrape_punch()
+        self.scrape_vanguard()
+        self.scrape_daily_post()
+
+    def handle_file_mapping(self, filename):
+        path = os.path.join(self.base_dir, 'commands/Jsons/{}.json'.format(filename))
+        return path
 
     def scrape_punch(self):
-        with open('management/commands/Jsons/Punch.json', 'r') as sites:
+        path = self.handle_file_mapping('Punch')
+        with open(path, 'r') as sites:
             context_data = self.parse_html(sites)
             data, soup = context_data['data'][0], context_data['soup']
             articles = soup.select('.' + data['selector'])
             for article in articles:
                 main_article = article.find_all('a')[0]
                 try:
-                    image = (str(main_article.find('figure')['data-src']).split(" "))
+                    image = (''.join(str(main_article.find('figure')['data-src']).split(" ")))
                 except TypeError:
                     image = ''
 
-                title =main_article['title']
+                title = main_article['title']
                 link = main_article['href']
-                    # image = image
+                source = 'Punch'
 
-                self.saving_to_db(title, image,link)
+                # image = image
+                print(image, title, link)
+                self.saving_to_db(title, image, link, source)
                 # self.news.append(main_article_dict)
-            # return main_article_dict
+            time.sleep(60)
 
     def scrape_vanguard(self):
-        with open('management/commands/Jsons/Vanguard.json', 'r') as sites:
+        path = self.handle_file_mapping('Vanguard')
+        with open(path, 'r') as sites:
             context_data = self.parse_html(sites)
             data, soup = context_data['data'][0], context_data['soup']
             articles = soup.find_all('article', class_=data['selector'])
@@ -99,22 +109,22 @@ class Scraper(BaseCommand):
                 main_article = article.find_all('a')[0]
                 main_header = article.find_all("h2", attrs={"class": "entry-title"})[0]
                 try:
-                    image = (str(main_article.find('img')['src']).split(" "))
+                    image = (''.join(str(main_article.find('img')['src']).split(" ")))
+                    title = main_header.find('a').get_text()
+                    link = main_header.find('a')['href']
+                    source = 'Vanguard'
                 except TypeError:
                     image = ''
                 #
-                main_article_dict = {
-                    "title": main_header.find('a').get_text(),
-                    "link": main_header.find('a')['href'],
-                    "image": image
 
-                }
-                self.news.append(main_article_dict)
-        print(self.news)
-        return self.news
+                self.saving_to_db(title, image, link, source)
+                # self.news.append(main_article_dict)
+
+        time.sleep(60)
 
     def scrape_nation(self):
-        with open('management/commands/Jsons/NationOnline.json', 'r') as sites:
+        path = self.handle_file_mapping('NationOnline')
+        with open(path, 'r') as sites:
             context_data = self.parse_html(sites)
             data, soup = context_data['data'][0], context_data['soup']
             articles = soup.find_all('article', class_=data['selector'])
@@ -125,27 +135,23 @@ class Scraper(BaseCommand):
                         "class": 'jeg_thumb'
                     })[0]
                 except IndexError:
-                    break;
+                    continue;
                 main_header = article.find_all("h3", attrs={"class": "jeg_post_title"})[0]
 
                 try:
                     image = ''.join(str(main_article.find('img')['data-src']).split(" "))
                     link = main_header.find('a')['href']
                     title = main_header.find('a').get_text()
+                    source = 'Nation Online'
                 except TypeError:
-                    break;
-
-                main_article_dict = {
-                    "title": main_header.find('a').get_text(),
-                    "link": main_header.find('a')['href'],
-                    "image": image
-
-                }
-                self.news.append(main_article_dict)
-        return self.news
+                    continue
+                self.saving_to_db(title, image, link, source)
+                # self.news.append(main_article_dict)
+        time.sleep(60)
 
     def scrape_premium_times(self):
-        with open('management/commands/Jsons/PremiumTimes.json', 'r') as sites:
+        path = self.handle_file_mapping('PremiumTimes')
+        with open(path, 'r') as sites:
             context_data = self.parse_html(sites)
             data, soup = context_data['data'][0], context_data['soup']
             articles = soup.find_all('div', class_=data['selector'])
@@ -160,20 +166,19 @@ class Scraper(BaseCommand):
                 try:
                     image = (str(main_article.find('img')['src']))
                     link = main_article.find('a')['href']
+                    title = main_header
+                    source = 'Premium Times'
+
                 except TypeError:
                     continue;
-                main_article_dict = {
-                    "title": main_header,
-                    "link": link,
-                    "image": image
-                }
 
-                print(main_article_dict)
-                self.news.append(main_article_dict)
-        return self.news
+                self.saving_to_db(title, image, link, source)
+
+        return time.sleep(60)
 
     def scrape_daily_post(self):
-        with open('management/commands/Jsons/DailyPost.json', 'r') as sites:
+        path = self.handle_file_mapping('DailyPost')
+        with open(path, 'r') as sites:
             context_data = self.parse_html(sites)
             data, soup = context_data['data'][0], context_data['soup']
             articles = soup.find_all('li', class_=data['selector'])
@@ -186,21 +191,11 @@ class Scraper(BaseCommand):
                     title = article.find('div', attrs={
                         "class": 'mvp-blog-story-text'
                     }).find('h2').get_text()
+                    source = 'Daily Post'
+
                 except IndexError:
                     continue;
 
-                main_article_dict = {
-                    "title": title,
-                    "link": link,
-                    "image": image
-                }
+                self.saving_to_db(title, image, link, source)
 
-                print(main_article_dict)
-                self.news.append(main_article_dict)
-        return self.news
-
-
-
-# def scrape_urls(news_link):
-#     for a in news_link.find_all('a', href=True):
-#         print("Found the URL:", a['href'])
+        time.sleep(60)
