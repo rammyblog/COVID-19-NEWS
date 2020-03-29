@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 
 class NewsList(generics.ListAPIView):
-    queryset = News.objects.all().order_by('-created')
+    queryset = News.objects.order_by('-created')[:100]
     serializer_class = NewsSerializers
 
     def list(self, request):
