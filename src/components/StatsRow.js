@@ -11,10 +11,10 @@ const StatsRow = () => {
         <>
 
             {
-                stats.map(stat => (
-                    <StatsRowStyled>
+                stats.map(( stat, id) => (
+                    <StatsRowStyled key={id}>
                         <div className='country-container'>
-                            <h6>Stats Overview</h6>
+                            <h6>Stats by Country</h6>
                          <Filter />
                          </div>
                         <div className='stats-container'>

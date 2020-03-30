@@ -14,22 +14,13 @@ export const StatProvider = ({children}) => {
     const [state, dispatch] = useReducer(StatsReducer, initialState);
 
     const fetchStats = useCallback(
-        async () => {
+        async (code) => {
 
             try {
-                let res = await axios.get("https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php", {
-                    headers: {
-                        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
-                        "x-rapidapi-key": "af071e0d68msh1b09ca43577c8f0p164b67jsn473e4cb936c0"
-                    },
-                    params: {
-                country: 'nigeria'
-  }
-                });
-
+                let res = await axios.get(`https://thevirustracker.com/free-api?countryTotal=${code}`)
                 dispatch({
                     type: 'GET_NIGERIA_STATS',
-                    payload: res.data.latest_stat_by_country
+                    payload: res.data.countrydata
                 });
             } catch
                 (e) {
@@ -42,14 +33,15 @@ export const StatProvider = ({children}) => {
     );
 
     useEffect(() => {
-        fetchStats()
+        fetchStats('NG')
 
     }, [fetchStats]);
 
     return (
         <StatsContext.Provider
             value={{
-                stats: state.stats
+                stats: state.stats,
+                fetchStats
             }}
         >
             {children}

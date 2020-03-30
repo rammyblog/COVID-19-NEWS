@@ -8,7 +8,8 @@ export const StatsRowStyled = styled.div`
         
         .country-container{
                text-align: left;
-               margin-right: 1rem
+               margin-right: 1rem;
+               margin-bottom: 10px;
                
         }
         
