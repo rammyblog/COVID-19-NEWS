@@ -1,5 +1,5 @@
-/*.center-block{*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*}*/
+.center-block{
+	display: grid;
+	justify-content: center;
+	align-items: center;
+}

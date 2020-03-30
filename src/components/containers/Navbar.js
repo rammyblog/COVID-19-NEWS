@@ -27,18 +27,6 @@ const Navbar = () => {
                                     {/*    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
                                     {/*</NavDropdown>*/}
                                 </Nav>
-                                <Nav>
-                                    <Nav.Link className='confimed' href="#">{stat.total_cases} Total Cases</Nav.Link>
-                                    <Nav.Link eventKey={2} href="#memes">
-                                      {stat.active_cases} Active Cases
-                                    </Nav.Link>
-                                  <Nav.Link eventKey={3} href="#" className='success'>
-                                      {stat.total_recovered} Recovered
-                                    </Nav.Link>
-                                  <Nav.Link eventKey={4} href="#" className='failed'>
-                                      {stat.total_deaths} Death
-                                    </Nav.Link>
-                                </Nav>
                             </Navigation.Collapse>
                         </Navigation>
                     </NavbarStyles>
