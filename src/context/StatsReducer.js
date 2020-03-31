@@ -8,7 +8,7 @@ export default (state, action) => {
             };
         case 'FAILED':
             return {
-                stats : []
+                stats : {active_cases: null}
             };
 
         default:

@@ -14,7 +14,6 @@ export const StatProvider = ({children}) => {
 
     const fetchStats = useCallback(
         async (code) => {
-
             try {
                 let res = await axios.get(`https://thevirustracker.com/free-api?countryTotal=${code}`)
                 dispatch({

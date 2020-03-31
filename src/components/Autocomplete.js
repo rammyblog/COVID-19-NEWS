@@ -29,7 +29,18 @@ export default function Filter() {
     const {fetchStats} = useContext(StatsContext);
     const classes = useStyles();
 
-  // const [state, setState] = useState(initState);
+  // const [affectedCountries, setAffectedCountries] = useState([]);
+  //
+  //   useEffect(() => {
+  //      const fetchAffectedCountries = async () => {
+  //          try{
+  //              const responst = wa
+  //          }catch (e) {
+  //              console.log(e)
+  //          }
+  //      }
+  //   }, []);
+
 
   return (
         <Autocomplete
