@@ -13,5 +13,7 @@ export const NavbarStyles = styled.div`
             color: #dc3545 !important;
             
          }
-
+        .navbar-brand:hover a{
+            text-decoration: none;
+        }
 `

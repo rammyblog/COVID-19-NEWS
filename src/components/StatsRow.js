@@ -6,7 +6,6 @@ import Filter from './Autocomplete';
 
 const StatsRow = () => {
     const {stats} = useContext(StatsContext);
-    console.log(stats)
 
     return (
         <>

@@ -11,3 +11,8 @@
 	font-size: 1.34rem;
 
 }
+
+.iframe-custom{
+	height: 100vh;
+	border: none;
+}
