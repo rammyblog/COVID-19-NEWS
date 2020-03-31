@@ -53,6 +53,8 @@ const Navbar = () => {
                             <Nav.Link onClick={() => setModalShow(true)}>Random Guide</Nav.Link>
                             <Link className='nav-link'>Prevention</Link>
                             <Link className='nav-link' to="/causes/">Causes</Link>
+                            <Link className='nav-link' to="/analytics/">Analytics</Link>
+
                             {/*    <NavDropdown.Divider/>*/}
                             {/*    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
                             {/*</NavDropdown>*/}

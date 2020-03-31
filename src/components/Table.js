@@ -17,8 +17,8 @@ export default function TableComponent({data}) {
             <tbody>
             {
 
-                data.map(country => (
-                    <tr>
+                data.map((country, idx) => (
+                    <tr key={idx}>
                         <td>{country.country_name}</td>
                         <td>{country.cases}</td>
                         <td>{country.total_recovered}</td>
