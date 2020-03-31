@@ -16,10 +16,15 @@ const useStyles = makeStyles({
   media: {
     height: 140,
   },
+  typography:{
+    fontFamily : 'Sen, sans-serif !important;'
+  }
+
 });
 
+
 export default function NewsBox(props) {
-  const {title, image, summary, source, link} = props.article
+  const {title, image, summary, link} = props.article
   const classes = useStyles();
 
   return (
@@ -31,7 +36,7 @@ export default function NewsBox(props) {
           title={title}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h5" style={{fontFamily: "'Sen', sans-serif !important"}} component="h2">
             {title}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">

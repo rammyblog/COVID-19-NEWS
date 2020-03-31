@@ -3,3 +3,11 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.custom-text-header-box{
+	border-left: 3px solid #28a745;
+	font-weight: 900;
+	font-family: 'Sen', sans-serif;
+	font-size: 1.34rem;
+
+}

@@ -5,7 +5,8 @@ export const CardStyled = styled.div`
 
         .card {
                    background-color: ${props => props.bgColor};
-                   color: ${props => props.textColor}
+                   color: ${props => props.textColor};
+                   font-family: 'Sen', sans-serif !important;
         }
         
         .card-title{

@@ -1,7 +1,6 @@
 import React, {createContext, useReducer, useEffect, useCallback} from "react"
 import StatsReducer from "./StatsReducer"
 import axios from "axios";
-import {newsContext} from "./NewsContext";
 
 const initialState = {
     stats: []
@@ -24,7 +23,9 @@ export const StatProvider = ({children}) => {
                 });
             } catch
                 (e) {
-                console.log(e)
+                dispatch({
+                    type : 'FAILED',
+                })
             }
 
 

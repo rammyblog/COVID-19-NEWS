@@ -2,28 +2,14 @@ import React, {useContext, useState} from "react"
 import {newsContext} from "../context/NewsContext"
 import NewsBox from './NewsBox'
 import {CardsRowStyled} from './StyledCards'
-import {makeStyles} from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Spinner from './containers/Spinner'
 import Pagination from './containers/Pagination'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: '50vh',
-        '& > * + *': {
-            marginLeft: theme.spacing(2),
-        }
-    },
-
-}));
-
 const Cards = () => {
-    const {news, loading} = useContext(newsContext);
-    const classes = useStyles();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [postPerPage, setPostsperPage] = useState(15);
+    const {news} = useContext(newsContext);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postPerPage] = useState(15);
     const indexOfLastPost = currentPage * postPerPage;
     const indexOfFirstPost = indexOfLastPost - postPerPage;
     const currentPosts = news ? news.slice(indexOfFirstPost, indexOfLastPost) : null;
@@ -32,7 +18,11 @@ const Cards = () => {
         <>
             {currentPosts ?
                 <>
+                     <div className='border-l-5 mb-2 text-success font-bold p-2 uppercase custom-text-header-box'>
+                         <p>Verified News</p>
+                     </div>
                     <CardsRowStyled>
+
                         {
 
                             currentPosts.map(article => (
@@ -49,7 +39,7 @@ const Cards = () => {
                 </>
 
 
-                : <div className={classes.root}><CircularProgress/></div>
+                : <Spinner />
             }
         </>
     )
