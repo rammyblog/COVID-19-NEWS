@@ -12,9 +12,8 @@ const Navbar = () => {
 
     useEffect(() => {
         async function fetchData() {
-
-
-            const response = await axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/masks.php', {
+            try{
+               const response = await axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/masks.php', {
                 responseType: 'arraybuffer', headers: {
                     "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
                     "x-rapidapi-key": "af071e0d68msh1b09ca43577c8f0p164b67jsn473e4cb936c0"
@@ -28,6 +27,10 @@ const Navbar = () => {
                     return `data:${response.headers['content-type'].toLowerCase()};base64,${image}`;
                 });
             setMaskImage(response)
+            }catch (e) {
+                console.log(e)
+            }
+
 
         }
 

@@ -15,12 +15,18 @@ export const NewsProvider = ({children}) => {
         dispatch({type: "SET_LOADING", payload: loadingBool});
     };
     const fetchNews = useCallback(async () => {
-        setLoading(true);
-        const response = await axios.get(
-            "https://scheduler-rammy.herokuapp.com/news/"
-        );
-        setLoading(false);
-        dispatch({type: "GET_NEWS", payload: response.data.news});
+        try {
+
+            setLoading(true);
+            const response = await axios.get(
+                "https://scheduler-rammy.herokuapp.com/news/"
+            );
+            setLoading(false);
+            dispatch({type: "GET_NEWS", payload: response.data.news});
+        }catch (e) {
+            console.log(e)
+        }
+
     }, [dispatch]);
 
     useEffect(() => {

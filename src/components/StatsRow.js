@@ -5,12 +5,11 @@ import {StatsRowStyled} from "./StatsRowStyled";
 import Filter from './Autocomplete';
 
 const StatsRow = () => {
-
     const {stats} = useContext(StatsContext);
+    console.log(stats)
 
     return (
         <>
-
             {
                 stats ? stats.map(( stat, id) => (
                     <StatsRowStyled key={id}>
