@@ -51,7 +51,7 @@ const Navbar = () => {
                     <Navigation.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={() => setModalShow(true)}>Random Guide</Nav.Link>
-                            <Link className='nav-link'>Prevention</Link>
+                            <Link className='nav-link' to="/prevention/">Prevention</Link>
                             <Link className='nav-link' to="/causes/">Causes</Link>
                             <Link className='nav-link' to="/analytics/">Analytics</Link>
 

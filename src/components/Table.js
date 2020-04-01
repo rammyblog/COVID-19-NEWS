@@ -5,7 +5,9 @@ export default function TableComponent({data}) {
     console.log(data)
     return (
         <>
-        {data ? <Table striped bordered hover>
+        {data ? 
+        <div>
+        <Table striped bordered hover size="sm" responsive="sm">
             <thead>
             <tr>
                 <th>Country</th>
@@ -28,7 +30,9 @@ export default function TableComponent({data}) {
             }
 
             </tbody>
-        </Table> : null}
+        </Table>
+        </div>
+         : null}
         </>
     )
 }

@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import TableComponent from "./Table";
 import PieChart from "./PieChart";
 import {DataAnalyticsStyled} from "./DataAnaylticsStyled";
 import {Spinner} from "react-bootstrap";
+import {StatsRowStyled} from './StatsRowStyled';
+import StatsCard from "./StatsCard";
+import TableComponent from "./Table";
 
 
 const Analytics = () => {
     // const data = [color, stats, type, bgColor, textColor, bgFooter];
 
     const [countriesAffected, setcountriesAffected] = useState([]);
+    const [NigeriaData, setNigeriaData] = useState([]);
     const [totalConfirmed, setConfirmed] = useState(null);
     const [totalRecovered, setTotalRecovered] = useState(null);
     const [totalDeaths, setTotalDeath] = useState(null);
@@ -38,37 +41,69 @@ const Analytics = () => {
             }
         }
 
+
         fetchData()
 
+
     }, []);
-    //
-    // useEffect(() => {
-    //     if (countriesAffected.length >= 1) {
-    //         let tempCountriesAffected = countriesAffected.slice();
-    //         let total_cases = tempCountriesAffected.reduce((accumulate, current) => {
-    //             return accumulate + parseFloat(current.cases.replace(/,/g, ''))
-    //         });
-    //         let total_deaths = tempCountriesAffected.reduce((accumulate, current) => {
-    //             return accumulate + parseFloat(current.deaths.replace(/,/g, ''))
-    //         });
-    //         let total_recovered = tempCountriesAffected.reduce((accumulate, current) => {
-    //             return accumulate + parseFloat(current.total_recovered.replace(/,/g, ''))
-    //         });
-    //         setTotalDeath(total_deaths);
-    //         setConfirmed(total_cases);
-    //
-    //     }
-    //
-    // }, [countriesAffected]);
+
+    useEffect(() => {
+        if (countriesAffected.length >= 1) {
+            setNigeriaData(getNigeriaData());
+        }
+
+    }, [countriesAffected]);
+
+    const getNigeriaData = () => {
+
+        let temp = countriesAffected.slice();
+        temp = temp.filter(country => (country.country_name === 'Nigeria'));
+        return temp
+
+
+    };
 
 
     return (
         <DataAnalyticsStyled>
-            <div style={{background: '#f2f2f2', width: '100%', justifyContent: 'center', display: 'flex'}}>
+            <div style={{background: '#f2f2f2', width: '100%', display: 'flex', flexDirection: 'column'}}>
                 {
-                    totalRecovered ? <PieChart total_cases={totalConfirmed} total_deaths={totalDeaths}
-                                               total_recovered={totalRecovered}/> : <Spinner animation={"grow"}/>
+                    NigeriaData ? NigeriaData.map((data, id) => (
+                        <StatsRowStyled component={'data'}>
+                            <div className='country-container'>
+                                <h6>Nigeria</h6>
+                            </div>
+                            <div>
+                                <div className='stats-container'>
+                                    <StatsCard color='danger' stats={data.cases} type='Confirmed'
+                                               bgColor='#fff5f5'
+                                               textColor='#000' bgFooter='#fed7d7'/>
+                                    <StatsCard color='success' stats={data.total_recovered} type='Recovered'
+                                               bgColor='#f0fff4'
+                                               textColor='#38a169' bgFooter='#c6f6d5'/>
+                                    <StatsCard color='light' stats={data.deaths} type='Deaths' bgColor='#edf2f7'
+                                               textColor='#718096' bgFooter='#e2e8f0'/>
+                                </div>
+                            </div>
+
+
+                        </StatsRowStyled>
+                    )) : <Spinner animation={"grow"}/>
+
                 }
+
+                {
+                    totalRecovered ?
+                        <>
+                            <div className='country-container'>
+                                <h6>World Statistics</h6>
+                            </div>
+                        <PieChart total_cases={totalConfirmed} total_deaths={totalDeaths}
+                                               total_recovered={totalRecovered}/>
+                                               </>
+                                               : <Spinner animation={"grow"}/>
+                }
+
             </div>
             <TableComponent data={countriesAffected}/>
         </DataAnalyticsStyled>

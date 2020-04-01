@@ -1,22 +1,70 @@
-import React from "react";
-import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
+// import React from "react"
+// import ReactApexChart from "react-apexcharts"
+// import { convertStringToNumber } from "./utils/convertStringToNumber"
+
+// class BarChart extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     console.log(this.props);
+    
+//     this.state = {
+        
+//         countries: [],
+    
+//       series: [
+//         {
+//           data: [this.countries.data()]
+//         }
+//       ],
+//       options: {
+//         chart: {
+//           type: "bar",
+//           height: 350
+//         },
+//         plotOptions: {
+//           bar: {
+//             horizontal: true
+//           }
+//         },
+//         dataLabels: {
+//           enabled: false
+//         },
+//         xaxis: {
+//           categories: [
+
+//           ]
+//         }
+//       }
+//     }
+//   }
 
 
+//     componentDidUpdate(prevProps, prevState, snapshot) {
+    
+//         if (this.props.data() !== prevProps.data()) {
+            
+//             const country = this.props.data
+            
+//             this.setState(() => ({
+//             countries: country
+//         }));
+    
+//     }
+// }
 
-const BarchartComponent = ({data}) => {
+//   render() {
+//     return (
+//       <div id="chart">
+//         <ReactApexChart
+//           options={this.state.options}
+//           series={this.state.series}
+//           type="bar"
+//           height={350}
+//         />
+//       </div>
+//     )
+//   }
+// }
 
-    return ( <BarChart style={{display:'flex', width:'100%', height:'100%'}} width={730} height={250} data={data}>
-                <CartesianGrid strokeDasharray="3 3"/>
-                <XAxis dataKey="name"/>
-                <YAxis/>
-                <Tooltip/>
-                <Legend/>
-                <Bar dataKey="pv" fill="#8884d8"/>
-                <Bar dataKey="uv" fill="#82ca9d"/>
-            </BarChart>
 
-    )
-}
-
-
-export default BarchartComponent
+// export default BarChart

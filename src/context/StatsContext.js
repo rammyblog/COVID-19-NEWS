@@ -28,7 +28,8 @@ export const StatProvider = ({children}) => {
 
             } catch
                 (e) {
-                console.log('HHEHh')
+                setLoading(false)
+
                 // dispatch({
                 //     type : 'FAILED',
                 // })

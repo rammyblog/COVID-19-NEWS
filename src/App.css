@@ -1,18 +1,35 @@
-.center-block{
-	display: grid;
-	justify-content: center;
-	align-items: center;
+.center-block {
+    display: grid;
+    justify-content: center;
+    align-items: center;
 }
 
-.custom-text-header-box{
-	border-left: 3px solid #28a745;
-	font-weight: 900;
-	font-family: 'Sen', sans-serif;
-	font-size: 1.34rem;
+.custom-text-header-box {
+    border-left: 3px solid #28a745;
+    font-weight: 900;
+    font-family: 'Sen', sans-serif;
+    font-size: 1.34rem;
 
 }
 
-.iframe-custom{
-	height: 100vh;
-	border: none;
+.iframe-custom {
+    height: 100vh;
+    border: none;
+}
+
+.card-footer {
+    padding: 9px !important;
+}
+
+.country-container {
+
+    margin-right: 1rem;
+    margin-bottom: 10px;
+}
+
+.country-container > h6 {
+    text-align: center;
+    font-weight: 900;
+    font-size: 2rem;
+
 }
