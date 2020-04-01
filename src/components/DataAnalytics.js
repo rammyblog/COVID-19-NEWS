@@ -6,7 +6,7 @@ import {Spinner} from "react-bootstrap";
 import {StatsRowStyled} from './StatsRowStyled';
 import StatsCard from "./StatsCard";
 import TableComponent from "./Table";
-
+import {convertStringToNumber} from "./utils/convertStringToNumber";
 
 const Analytics = () => {
     // const data = [color, stats, type, bgColor, textColor, bgFooter];
@@ -63,6 +63,15 @@ const Analytics = () => {
 
     };
 
+    const calcRecovered = (cases, active_cases, total_recovered)=> {
+        let new_Recovered = convertStringToNumber(cases) - convertStringToNumber(active_cases) - convertStringToNumber(total_recovered)
+        if(convertStringToNumber(total_recovered) < new_Recovered) {
+            return new_Recovered
+        }else {
+            return 0
+        }
+    }
+
 
     return (
         <DataAnalyticsStyled>
@@ -75,13 +84,13 @@ const Analytics = () => {
                             </div>
                             <div>
                                 <div className='stats-container'>
-                                    <StatsCard color='danger' stats={data.cases} type='Confirmed'
+                                    <StatsCard color='danger' stats={data.cases} new_cases={convertStringToNumber(data.new_cases)} type='Confirmed'
                                                bgColor='#fff5f5'
                                                textColor='#000' bgFooter='#fed7d7'/>
-                                    <StatsCard color='success' stats={data.total_recovered} type='Recovered'
+                                    <StatsCard color='success' stats={data.total_recovered}  new_cases={calcRecovered(data.cases, data.active_cases, data.total_recovered)}  type='Recovered'
                                                bgColor='#f0fff4'
                                                textColor='#38a169' bgFooter='#c6f6d5'/>
-                                    <StatsCard color='light' stats={data.deaths} type='Deaths' bgColor='#edf2f7'
+                                    <StatsCard color='light' stats={data.deaths} type='Deaths'  new_cases={convertStringToNumber(data.new_deaths)} bgColor='#edf2f7'
                                                textColor='#718096' bgFooter='#e2e8f0'/>
                                 </div>
                             </div>
