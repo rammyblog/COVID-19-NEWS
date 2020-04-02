@@ -19,8 +19,6 @@
     "react-iframe": "^1.8.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "react-vis": "^1.11.7",
-    "recharts": "^1.8.5",
     "styled-components": "^5.0.1"
   },
   "scripts": {
