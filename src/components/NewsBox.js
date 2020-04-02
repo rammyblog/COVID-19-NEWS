@@ -28,12 +28,15 @@ export default function NewsBox(props) {
   const classes = useStyles();
 
   return (
+      <>
+        <a href={link} target='_blank' className='card-link' rel="noopener noreferrer">
     <Card className={classes.root}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
           image={image}
           title={title}
+          link={link}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" style={{fontFamily: "'Sen', sans-serif !important"}} component="h2">
@@ -51,5 +54,7 @@ export default function NewsBox(props) {
 
       </CardActions>
     </Card>
+      </a>
+        </>
   );
 }

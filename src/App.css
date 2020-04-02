@@ -41,3 +41,11 @@
     font-size: 13px;
     font-weight: 400;
 }
+
+.card-link{
+    text-decoration: none;
+}
+
+.card-link:hover{
+    text-decoration: none;
+}
