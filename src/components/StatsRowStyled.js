@@ -23,6 +23,13 @@ export const StatsRowStyled = styled.div`
 
         }
         
+        .card-row{
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
         
 
         

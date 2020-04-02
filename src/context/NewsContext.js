@@ -21,9 +21,11 @@ export const NewsProvider = ({children}) => {
             const response = await axios.get(
                 "https://scheduler-rammy.herokuapp.com/news/"
             );
+
             setLoading(false);
             dispatch({type: "GET_NEWS", payload: response.data.news});
-        }catch (e) {
+        } catch (e) {
+            setLoading(false);
             console.log(e)
         }
 

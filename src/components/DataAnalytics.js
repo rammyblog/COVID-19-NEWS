@@ -9,8 +9,6 @@ import TableComponent from "./Table";
 import {convertStringToNumber} from "./utils/convertStringToNumber";
 
 const Analytics = () => {
-    // const data = [color, stats, type, bgColor, textColor, bgFooter];
-
     const [countriesAffected, setcountriesAffected] = useState([]);
     const [NigeriaData, setNigeriaData] = useState([]);
     const [totalConfirmed, setConfirmed] = useState(null);
@@ -46,6 +44,7 @@ const Analytics = () => {
 
 
     }, []);
+
 
     useEffect(() => {
         if (countriesAffected.length >= 1) {

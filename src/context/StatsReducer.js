@@ -2,7 +2,7 @@ export default (state, action) => {
     switch (action.type) {
         case 'GET_NIGERIA_STATS':
             return {
-                stats: action.payload,
+                stats: [action.payload],
 
             };
         case 'FAILED':

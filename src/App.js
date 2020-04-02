@@ -7,6 +7,7 @@ import {StatProvider} from "./context/StatsContext";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import {BrowserRouter as Router} from "react-router-dom";
 import BaseRoute from "./routes";
+import Footer from "./components/containers/Footer";
 
 function App() {
   const theme = createMuiTheme({
@@ -26,8 +27,8 @@ function App() {
       <Navbar/>
       <Container>
           <BaseRoute/>
-
       </Container>
+        <Footer/>
       </ThemeProvider>
     </StatProvider>
     </NewsProvider>

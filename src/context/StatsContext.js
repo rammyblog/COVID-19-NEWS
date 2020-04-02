@@ -19,19 +19,26 @@ export const StatProvider = ({children}) => {
         async (code) => {
             try {
                 setLoading(true)
-                let res = await axios.get(`https://thevirustracker.com/free-api?countryTotal=${code}`)
+                let res = await axios.get(`https://corona.lmao.ninja/countries/${code}`, {
+                    headers:{
+                        'Content-Type': 'application/json',
+                    }
+                })
+
                 dispatch({
                     type: 'GET_NIGERIA_STATS',
-                    payload: res.data.countrydata
+                    payload: res.data
                 });
                 setLoading(false)
+
 
             } catch
                 (e) {
                 setLoading(false)
+                console.log(e)
 
                 // dispatch({
-                //     type : 'FAILED',
+                //setLoading(false)     type : 'FAILED',
                 // })
             }
 

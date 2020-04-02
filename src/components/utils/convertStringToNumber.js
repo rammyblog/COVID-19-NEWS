@@ -1,3 +1,3 @@
 export const convertStringToNumber = (numberstr) => {
-    return parseFloat(numberstr.replace(/,/g, ''))
+    return typeof(numberstr) !== 'number' ?  parseFloat(numberstr.replace(/,/g, '')) : numberstr
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import Iframe from 'react-iframe'
 import IFrame from "./containers/IFrame";
 
 const Causes = () => {
@@ -9,9 +8,9 @@ const Causes = () => {
 
             <h3>What is COVID-19?</h3>
 
-            <iframe width='100%' height="500" src="https://www.youtube.com/embed/OZcRD9fV7jo" frameBorder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen></iframe>
+            <iframe title='Coronavirus Causes Video' width='100%' height="500" src="https://www.youtube.com/embed/OZcRD9fV7jo" frameBorder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen/>
             {
                 urls.map((url, idx) => (
                 <IFrame url={url}/>
