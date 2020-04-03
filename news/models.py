@@ -13,3 +13,11 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class StatesInfo(models.Model):
+    state = models.CharField(max_length=250, help_text='State', unique=True)
+    number_confirmed = models.IntegerField(help_text='Number of confirmed Coronavirus cases')
+
+    def __str__(self):
+        return '{0} has {1} confirmed cases'.format(self.state, self.number_confirmed)

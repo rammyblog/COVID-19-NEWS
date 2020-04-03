@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import random
 import json
 import time
-from news.models import News
+from news.models import News, StatesInfo
 import os
 
 import argparse
@@ -58,7 +58,7 @@ class Command(BaseCommand):
         }
         return context
 
-    def saving_to_db(self, title, image, link, source, summary):
+    def saving_news_to_db(self, title, image, link, source, summary):
         try:
             News.objects.create(
                 title=title,
@@ -71,12 +71,23 @@ class Command(BaseCommand):
         except IntegrityError:
             print('%s already exists' % (title,))
 
+    def saving_states_cases_to_db(self, state_info):
+        for states in state_info:
+            # print(states)
+            StatesInfo.objects.update_or_create(
+                state=states['state'],
+                number_confirmed=int(states['num'])
+            )
+
+
     def handle(self, *args, **options):
+        self.scrape_state_cases()
         self.scrape_punch()
         self.scrape_vanguard()
         self.scrape_premium_times()
         self.scrape_nation()
         self.scrape_daily_post()
+
 
         # self.scrape_daily_post()
 
@@ -105,7 +116,7 @@ class Command(BaseCommand):
 
                 # image = image
 
-                self.saving_to_db(title, image, link, source, summary)
+                self.saving_news_to_db(title, image, link, source, summary)
 
                 # self.news.append(main_article_dict)
             time.sleep(60)
@@ -131,7 +142,7 @@ class Command(BaseCommand):
                     image = ''
                 #
 
-                self.saving_to_db(title, image, link, source, summary)
+                self.saving_news_to_db(title, image, link, source, summary)
                 # self.news.append(main_article_dict)
 
         time.sleep(60)
@@ -160,7 +171,7 @@ class Command(BaseCommand):
                     summary = main_summary.find('p').get_text()
                 except TypeError:
                     continue
-                self.saving_to_db(title, image, link, source, summary)
+                self.saving_news_to_db(title, image, link, source, summary)
 
                 # self.news.append(main_article_dict)
         time.sleep(60)
@@ -191,7 +202,7 @@ class Command(BaseCommand):
                 except TypeError:
                     continue;
 
-                self.saving_to_db(title, image, link, source, summary)
+                self.saving_news_to_db(title, image, link, source, summary)
 
         return time.sleep(60)
 
@@ -216,6 +227,25 @@ class Command(BaseCommand):
                 except IndexError:
                     continue;
 
-                self.saving_to_db(title, image, link, source, summary)
+                self.saving_news_to_db(title, image, link, source, summary)
+
+        time.sleep(60)
+
+    def scrape_state_cases(self):
+        states_info = []
+        link = 'https://covid19.ncdc.gov.ng/'
+        res = requests.get(link)
+        soup = BeautifulSoup(res.text, "html.parser")
+        table = soup.find(id="custom3")
+        tbody = table.find_all("tr")
+        for s in tbody:
+            if tbody.index(s) != 0 and tbody.index(s) != len(tbody) - 1:
+                states_info.append({"state": s.find("td").get_text().strip(), "num": s.find("b").get_text()})
+                states_info.append({"state": s.select("td:nth-child(3)")[0].get_text().strip(),
+                                    "num": s.select("p > b")[1].get_text()})
+            if tbody.index(s) == len(tbody) - 1:
+                states_info.append({"state": s.find("td").get_text().strip(), "num": s.find("b").get_text()})
+
+        self.saving_states_cases_to_db(states_info)
 
         time.sleep(60)
