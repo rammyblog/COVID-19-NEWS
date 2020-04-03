@@ -51,7 +51,8 @@ const Navbar = () => {
                             }}>Random Guide</Nav.Link>
                             <Link className='nav-link' to="/prevention/">Prevention</Link>
                             <Link className='nav-link' to="/causes/">Causes</Link>
-                            <Link className='nav-link' to="/analytics/">Analytics</Link>
+                            <Link className='nav-link' to="/analytics/">Global Analytics</Link>
+                            <Link to='nigeria-analytics/' className='nav-link'>Nigeria Analytics</Link>
 
                             {/*    <NavDropdown.Divider/>*/}
                             {/*    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}

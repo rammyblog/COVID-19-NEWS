@@ -1,45 +1,37 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import PieChart from "./PieChart";
+
 import {DataAnalyticsStyled} from "./DataAnaylticsStyled";
 import {Spinner} from "react-bootstrap";
 import {StatsRowStyled} from './StatsRowStyled';
 import StatsCard from "./StatsCard";
 import TableComponent from "./Table";
 import {convertStringToNumber} from "./utils/convertStringToNumber";
+import BarChart from "./Barchart";
 
-const Analytics = () => {
+const NigeriaDataAnalytics = () => {
+    const [statesData, setStatesData] = useState([]);
     const [countriesAffected, setcountriesAffected] = useState([]);
     const [NigeriaData, setNigeriaData] = useState([]);
-    const [totalConfirmed, setConfirmed] = useState(null);
-    const [totalRecovered, setTotalRecovered] = useState(null);
-    const [totalDeaths, setTotalDeath] = useState(null);
+
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php', {
+                 const response = await axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php', {
                     headers: {
                         "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
                         "x-rapidapi-key": "af071e0d68msh1b09ca43577c8f0p164b67jsn473e4cb936c0"
                     },
                 });
-                const res = await axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php', {
-                    headers: {
-                        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
-                        "x-rapidapi-key": "af071e0d68msh1b09ca43577c8f0p164b67jsn473e4cb936c0"
-                    }
-                });
-                setcountriesAffected(response.data.countries_stat);
-                setTotalDeath(res.data.total_deaths);
-                setConfirmed(res.data.total_cases);
-                setTotalRecovered(res.data.total_recovered)
+                const res = await axios.get('https://scheduler-rammy.herokuapp.com/cases-by-states/');
+                setStatesData(res.data.data);
+                setcountriesAffected(response.data.countries_stat)
+
             } catch (e) {
                 console.log(e)
             }
         }
-
-
         fetchData()
 
 
@@ -54,13 +46,16 @@ const Analytics = () => {
     }, [countriesAffected]);
 
     const getNigeriaData = () => {
-
         let temp = countriesAffected.slice();
         temp = temp.filter(country => (country.country_name === 'Nigeria'));
         return temp
-
-
     };
+
+    const getMoreThanOneCase = () => {
+        let temp = statesData.slice()
+        temp = temp.filter(state => state.number_confirmed >= 1)
+        return temp
+    }
 
     const calcRecovered = (cases, active_cases, total_recovered)=> {
         let new_Recovered = convertStringToNumber(cases) - convertStringToNumber(active_cases) - convertStringToNumber(total_recovered)
@@ -71,15 +66,15 @@ const Analytics = () => {
         }
     }
 
-    const tableHeaders = ['Country', 'Total Cases', 'Total Recovered', 'Total Deaths']
+    const headers = ['State', 'Confirmed']
 
 
     return (
-        <DataAnalyticsStyled>
+        <DataAnalyticsStyled style={{background: '#f2f2f2', width: '100%', display: 'flex', flexDirection: 'column'}} >
             <div style={{background: '#f2f2f2', width: '100%', display: 'flex', flexDirection: 'column'}}>
                 {
                     NigeriaData ? NigeriaData.map((data, id) => (
-                        <StatsRowStyled key={id} component={'data'}>
+                        <StatsRowStyled component={'data'} key={id}>
                             <div className='country-container'>
                                 <h6>Nigeria</h6>
                             </div>
@@ -103,21 +98,20 @@ const Analytics = () => {
                 }
 
                 {
-                    totalRecovered ?
+                    statesData ?
                         <>
                             <div className='country-container'>
-                                <h6>World Statistics</h6>
+                                <h6>Cases By States Statistics</h6>
                             </div>
-                        <PieChart total_cases={totalConfirmed} total_deaths={totalDeaths}
-                                               total_recovered={totalRecovered}/>
+                        <BarChart data={getMoreThanOneCase()}/>
                                                </>
                                                : <Spinner animation={"grow"}/>
                 }
 
             </div>
-            <TableComponent data={countriesAffected} headers={tableHeaders}/>
+            <TableComponent states={statesData} headers={headers}/>
         </DataAnalyticsStyled>
     );
 };
 
-export default Analytics;
+export default NigeriaDataAnalytics;

@@ -1,37 +1,50 @@
 import React from 'react';
 import {Table} from "react-bootstrap";
 
-export default function TableComponent({data}) {
+export default function TableComponent({data, headers, states}) {
     return (
         <>
-        {data ? 
-        <div>
-        <Table striped bordered hover size="sm" responsive="sm">
-            <thead>
-            <tr>
-                <th>Country</th>
-                <th>Total cases</th>
-                <th>Total Recovered</th>
-                <th>Total deaths</th>
-            </tr>
-            </thead>
-            <tbody>
-            {
+            {data || states ?
+                <div>
+                    <Table striped bordered hover size="sm" responsive="sm">
+                        <thead>
+                        <tr>
+                            {
+                                headers ? headers.map((heading, idx) => (
 
-                data.map((country, idx) => (
-                    <tr key={idx}>
-                        <td>{country.country_name}</td>
-                        <td>{country.cases}</td>
-                        <td>{country.total_recovered}</td>
-                        <td>{country.deaths}</td>
-                    </tr>
-                ))
-            }
+                                    <th key={idx}>{heading}</th>
 
-            </tbody>
-        </Table>
-        </div>
-         : null}
+                                )) : null
+
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {
+
+                            data ? data.map((country, idx) => (
+                                <tr key={idx}>
+                                    <td>{country.country_name}</td>
+                                    <td>{country.cases}</td>
+                                    <td>{country.total_recovered}</td>
+                                    <td>{country.deaths}</td>
+                                </tr>
+                            )) : null
+                        }
+
+                        {
+                            states ? states.map((state, idx) => (
+                                <tr key={idx}>
+                                    <td>{state.state}</td>
+                                    <td>{state.number_confirmed}</td>
+                                </tr>
+                            )) : null
+                        }
+
+                        </tbody>
+                    </Table>
+                </div>
+                : null}
         </>
     )
 }

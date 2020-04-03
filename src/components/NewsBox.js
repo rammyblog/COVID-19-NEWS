@@ -29,8 +29,11 @@ export default function NewsBox(props) {
 
   return (
       <>
-        <a href={link} target='_blank' className='card-link' rel="noopener noreferrer">
+
+
     <Card className={classes.root}>
+       <a href={link} target='_blank' className='card-link' rel="noopener noreferrer">
+
       <CardActionArea>
         <CardMedia
           className={classes.media}
@@ -47,6 +50,8 @@ export default function NewsBox(props) {
           </Typography>
         </CardContent>
       </CardActionArea>
+        </a>
+
       <CardActions>
         <Button size="small" color="primary">
           <a href={link} target='_blank' rel="noopener noreferrer">Read More</a>
@@ -54,7 +59,7 @@ export default function NewsBox(props) {
 
       </CardActions>
     </Card>
-      </a>
+
         </>
   );
 }
