@@ -49,3 +49,15 @@
 .card-link:hover{
     text-decoration: none;
 }
+
+.android-container {
+    display: none;
+  }
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .android-container {
+      display: block;
+    width: 50%;
+      margin: 0 auto;
+  }
+}
