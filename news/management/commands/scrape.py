@@ -81,7 +81,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        self.scrape_state_cases()
+        # self.scrape_state_cases()
         self.scrape_punch()
         self.scrape_vanguard()
         self.scrape_premium_times()

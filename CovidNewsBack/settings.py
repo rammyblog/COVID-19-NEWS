@@ -30,7 +30,7 @@ except ImportError as e:
     pass
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
