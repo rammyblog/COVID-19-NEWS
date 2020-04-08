@@ -17,5 +17,5 @@ class StatesInfoSerializers(serializers.ModelSerializer):
 class NigeriaSummaryInfoSerializers(serializers.ModelSerializer):
 
     class Meta:
-        model = StatesInfo
+        model = NigeriaSummaryInfo
         fields = ('datetime_created', 'datetime_updated','country', 'total_tested','number_confirmed', 'total_recovered', 'total_deaths', 'total_active')

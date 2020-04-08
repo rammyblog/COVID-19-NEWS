@@ -48,6 +48,6 @@ class NigeriaSummaryInfoList(generics.ListAPIView):
 
         context = {
             'message': 'success',
-            'data':serializer.data
+            'data':serializers.data
         }
         return Response(context)
