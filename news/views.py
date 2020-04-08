@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import News, StatesInfo
+from .models import News, StatesInfo, NigeriaSummaryInfo
 from rest_framework import generics, viewsets
-from .serializers import NewsSerializers, StatesInfoSerializers
+from .serializers import NewsSerializers, StatesInfoSerializers, NigeriaSummaryInfoSerializers
 from rest_framework.response import Response
 from django.utils import timezone
 
@@ -33,5 +33,21 @@ class StateList(generics.ListAPIView):
             'length': len(queryset),
             'data': serializers.data,
         }
-        
+
+        return Response(context)
+
+
+class NigeriaSummaryInfoList(generics.ListAPIView):
+    queryset = NigeriaSummaryInfo.objects.all()
+    serializer_class = NigeriaSummaryInfoSerializers
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializers = NigeriaSummaryInfoSerializers(queryset, many=True)
+
+        context = {
+            'message': 'success',
+            'data':serializer.data
+        }
         return Response(context)

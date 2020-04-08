@@ -18,6 +18,24 @@ class News(models.Model):
 class StatesInfo(models.Model):
     state = models.CharField(max_length=250, help_text='State', unique=True)
     number_confirmed = models.IntegerField(help_text='Number of confirmed Coronavirus cases')
+    total_recovered = models.IntegerField(help_text='Number of confirmed Coronavirus recovered', default=0)
+    total_deaths = models.IntegerField(help_text='Number of confirmed Coronavirus deaths', default=0)
+    total_active = models.IntegerField(help_text='Number of confirmed active Coronavirus cases', default=0)
 
     def __str__(self):
         return '{0} has {1} confirmed cases'.format(self.state, self.number_confirmed)
+
+
+class NigeriaSummaryInfo(models.Model):
+    country = models.CharField(max_length=250, help_text='Country', unique=True, default='Nigeria')
+    total_tested = models.CharField(max_length=50, help_text='Total Number of People Tested')
+    number_confirmed = models.IntegerField(help_text='Number of confirmed Coronavirus cases')
+    total_recovered = models.IntegerField(help_text='Number of confirmed Coronavirus recovered ')
+    total_deaths = models.IntegerField(help_text='Number of confirmed Coronavirus deaths')
+    total_active = models.IntegerField(help_text='Number of confirmed active Coronavirus cases')
+    datetime_created = models.DateTimeField(auto_now_add=True)
+    datetime_updated = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return 'Nigeria has {0} confirmed cases'.format(self.number_confirmed)

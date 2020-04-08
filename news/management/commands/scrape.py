@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import random
 import json
 import time
-from news.models import News, StatesInfo
+from news.models import News, StatesInfo,NigeriaSummaryInfo
 import os
 
 import argparse
@@ -45,7 +45,8 @@ class Command(BaseCommand):
     def __init__(self):
         self.session = requests.Session()
         self.session.headers = {"User-Agent": random.choice(user_agent_list)}
-        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.base_dir = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))
         self.news = []
 
     def parse_html(self, json_object):
@@ -74,14 +75,41 @@ class Command(BaseCommand):
     def saving_states_cases_to_db(self, state_info):
         for states in state_info:
             # print(states)
+            default = {
+                'number_confirmed':int(states['total_confirmed']),
+                'total_recovered':int(states['total_recovered']),
+                'total_deaths':int(states['total_deaths']),
+                'total_active':int(states['total_active'])
+            }
             StatesInfo.objects.update_or_create(
                 state=states['state'],
-                number_confirmed=int(states['num'])
+                defaults=default
+
             )
 
+    def saving_cases_summary_to_db(self, country_info):
+
+        print(country_info)
+        total_confirmed = int(country_info['total_confirmed_cases'])
+        total_recovered = int(country_info['discharged'])
+        total_deaths = int(country_info['death'])
+        total_active = total_confirmed - total_deaths - total_recovered
+
+        default = {
+                'total_tested':country_info['total_samples_tested'],
+            'number_confirmed':total_confirmed,
+            'total_recovered':total_recovered,
+            "total_deaths":total_deaths,
+            'total_active':total_active
+        }    
+        NigeriaSummaryInfo.objects.update_or_create(
+            country='Nigeria',
+            defaults=default
+
+        )
 
     def handle(self, *args, **options):
-        # self.scrape_state_cases()
+        self.scrape_state_cases()
         self.scrape_punch()
         self.scrape_vanguard()
         self.scrape_premium_times()
@@ -89,10 +117,9 @@ class Command(BaseCommand):
         self.scrape_daily_post()
 
 
-        # self.scrape_daily_post()
-
     def handle_file_mapping(self, filename):
-        path = os.path.join(self.base_dir, 'commands/Jsons/{}.json'.format(filename))
+        path = os.path.join(
+            self.base_dir, 'commands/Jsons/{}.json'.format(filename))
         return path
 
     def scrape_punch(self):
@@ -104,7 +131,8 @@ class Command(BaseCommand):
             for article in articles:
                 main_article = article.find_all('a')[0]
                 try:
-                    image = (''.join(str(main_article.find('figure')['data-src']).split(" ")))
+                    image = (
+                        ''.join(str(main_article.find('figure')['data-src']).split(" ")))
                     summary = main_article.find('p').get_text()
                 except TypeError:
                     image = ''
@@ -129,11 +157,14 @@ class Command(BaseCommand):
             articles = soup.find_all('article', class_=data['selector'])
             for article in articles:
                 main_article = article.find_all('a')[0]
-                main_header = article.find_all("h2", attrs={"class": "entry-title"})[0]
-                main_summary = article.find('div', attrs={"class": "entry-content"})
+                main_header = article.find_all(
+                    "h2", attrs={"class": "entry-title"})[0]
+                main_summary = article.find(
+                    'div', attrs={"class": "entry-content"})
                 # print(main_summary)
                 try:
-                    image = (''.join(str(main_article.find('img')['src']).split(" ")))
+                    image = (
+                        ''.join(str(main_article.find('img')['src']).split(" ")))
                     title = main_header.find('a').get_text()
                     link = main_header.find('a')['href']
                     source = 'Vanguard'
@@ -160,11 +191,14 @@ class Command(BaseCommand):
                         "class": 'jeg_thumb'
                     })[0]
                 except IndexError:
-                    continue;
-                main_header = article.find_all("h3", attrs={"class": "jeg_post_title"})[0]
-                main_summary = article.find_all("div", attrs={"class": "jeg_post_excerpt"})[0]
+                    continue
+                main_header = article.find_all(
+                    "h3", attrs={"class": "jeg_post_title"})[0]
+                main_summary = article.find_all(
+                    "div", attrs={"class": "jeg_post_excerpt"})[0]
                 try:
-                    image = ''.join(str(main_article.find('img')['data-src']).split(" "))
+                    image = ''.join(
+                        str(main_article.find('img')['data-src']).split(" "))
                     link = main_header.find('a')['href']
                     title = main_header.find('a').get_text()
                     source = 'Nation Online'
@@ -188,19 +222,19 @@ class Command(BaseCommand):
                         "class": 'story-img-container'
                     })[0]
                 except IndexError:
-                    continue;
-                main_header = article.find_all("h3", attrs={"class": "a-story-title"})[0].get_text()
-                main_summary = article.find_all("div", attrs={"class": "a-story-content"})[0].get_text()
+                    continue
+                main_header = article.find_all(
+                    "h3", attrs={"class": "a-story-title"})[0].get_text()
+                main_summary = article.find_all(
+                    "div", attrs={"class": "a-story-content"})[0].get_text()
                 try:
                     image = (str(main_article.find('img')['src']))
                     link = main_article.find('a')['href']
                     title = main_header
                     source = 'Premium Times'
                     summary = main_summary
-
-
                 except TypeError:
-                    continue;
+                    continue
 
                 self.saving_news_to_db(title, image, link, source, summary)
 
@@ -225,27 +259,48 @@ class Command(BaseCommand):
                     summary = title
 
                 except IndexError:
-                    continue;
+                    continue
 
                 self.saving_news_to_db(title, image, link, source, summary)
 
         time.sleep(60)
 
-    def scrape_state_cases(self):
+    def scrape_state_cases(self):      
         states_info = []
-        link = 'https://covid19.ncdc.gov.ng/'
-        res = requests.get(link)
+        states = []
+        summary_info = {}
+        html = 'https://covid19.ncdc.gov.ng/'
+        res = requests.get(html)
         soup = BeautifulSoup(res.text, "html.parser")
-        table = soup.find(id="custom3")
-        tbody = table.find_all("tr")
-        for s in tbody:
-            if tbody.index(s) != 0 and tbody.index(s) != len(tbody) - 1:
-                states_info.append({"state": s.find("td").get_text().strip(), "num": s.find("b").get_text()})
-                states_info.append({"state": s.select("td:nth-child(3)")[0].get_text().strip(),
-                                    "num": s.select("p > b")[1].get_text()})
-            if tbody.index(s) == len(tbody) - 1:
-                states_info.append({"state": s.find("td").get_text().strip(), "num": s.find("b").get_text()})
+        states_table = soup.find(id="custom3")
+        summary_table = soup.find(id="custom1")
+        states_table_tbody = states_table.find_all("tr")
+        summary_table_tbody = summary_table.find_all("tr")
 
-        self.saving_states_cases_to_db(states_info)
 
-        time.sleep(60)
+        for s in states_table_tbody:
+            if states_table_tbody.index(s) != 0 and states_table_tbody.index(s) != len(states_table_tbody) - 1:
+                value = s.get_text().strip()
+                states_info.append(value.split('\n\n\n'))
+
+        for tr in summary_table_tbody:
+            key = tr.find("td").get_text().strip().lower().split(' ')
+            key = ('_').join(key)
+            value =tr.find("b").get_text().strip()
+            summary_info.update({key:value})
+
+        for state in states_info:
+            context = {
+                'state': state[0],
+                'total_confirmed': state[1],
+                'total_active': state[2],
+                'total_recovered': state[3],
+                'total_deaths': state[4],
+
+            }
+            states.append(context)
+
+        self.saving_states_cases_to_db(states)
+        time.sleep(10)
+        self.saving_cases_summary_to_db(summary_info)
+        time.sleep(10)
