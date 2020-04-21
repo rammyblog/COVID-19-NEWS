@@ -30,7 +30,7 @@ for tr in summary_table_tbody:
 for state in states_info:
     context ={
         'state': state[0],
-        'total_confirmed': state[1],
+        'total_confirmed': state[1].replace('\u202c', ''),
         'total_active': state[2],
         'total_recovered': state[3],
         'total_death': state[4],

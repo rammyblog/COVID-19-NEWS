@@ -88,8 +88,6 @@ class Command(BaseCommand):
             )
 
     def saving_cases_summary_to_db(self, country_info):
-
-        print(country_info)
         total_confirmed = int(country_info['total_confirmed_cases'])
         total_recovered = int(country_info['discharged'])
         total_deaths = int(country_info['death'])
@@ -292,7 +290,7 @@ class Command(BaseCommand):
         for state in states_info:
             context = {
                 'state': state[0],
-                'total_confirmed': state[1],
+                'total_confirmed': state[1].replace('\u202c', ''),
                 'total_active': state[2],
                 'total_recovered': state[3],
                 'total_deaths': state[4],
